@@ -128,6 +128,20 @@ function create() {
   if (!this.sys.game.device.os.desktop) {
     addVirtualJoystick();
   }
+
+  if (!this.sys.game.device.os.desktop) {
+    this.input.addPointer(2); // 추가 포인터 (멀티 터치 지원)
+    this.input.on("pointerdown", function (pointer) {
+      if (pointer.isDown) {
+        pointer.event.preventDefault(); // 터치 기본 동작 방지
+      }
+    });
+
+    // 텍스트 선택 방지
+    this.input.addListener("pointerdown", function (event) {
+      event.event.preventDefault();
+    });
+  }
 }
 
 function addVirtualJoystick() {
@@ -451,3 +465,20 @@ function endFeverTime() {
     loop: true,
   });
 }
+
+// 터치 이벤트 기본 동작 방지
+document.addEventListener(
+  "touchstart",
+  function (e) {
+    e.preventDefault();
+  },
+  { passive: false }
+);
+
+document.getElementById("game-container").addEventListener(
+  "touchstart",
+  function (e) {
+    e.preventDefault();
+  },
+  { passive: false }
+);
