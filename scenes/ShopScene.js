@@ -8,6 +8,7 @@ class ShopScene extends Phaser.Scene {
     this.currentColor = null;
     this.currentCharacter = null;
     this.currentSpecial = null;
+    this.sizeUpCounter = 0; // 히든 커맨드를 위한 카운터
   }
 
   init(data) {
@@ -173,6 +174,17 @@ class ShopScene extends Phaser.Scene {
   }
 
   buySpecial(item) {
+    if (item.key === "sizeUp") {
+      this.sizeUpCounter++;
+      if (this.sizeUpCounter === 10) {
+        this.coins += 1000;
+        this.sizeUpCounter = 0;
+        this.coinsText.setText(`Coins: ${this.coins.toLocaleString()}`);
+        this.savePurchases();
+        alert("히든 커맨드 활성화: 1000 코인 추가!");
+      }
+    }
+
     if (this.specialPurchases.includes(item.key)) {
       if (this.currentSpecial.includes(item.key)) {
         this.currentSpecial = this.currentSpecial.filter(
