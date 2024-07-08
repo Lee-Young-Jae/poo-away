@@ -1,7 +1,7 @@
 const config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
+  width: window.innerWidth, // 게임 화면 너비
+  height: window.innerHeight, // 게임 화면 높이
   parent: "game-container",
   physics: {
     default: "arcade",
@@ -123,6 +123,37 @@ function create() {
     frameRate: 10,
     repeat: -1,
   });
+
+  if (!this.sys.game.device.os.desktop) {
+    addVirtualJoystick();
+  }
+}
+
+function addVirtualJoystick() {
+  const leftButton = document.getElementById("left-button");
+  const rightButton = document.getElementById("right-button");
+  const jumpButton = document.getElementById("jump-button");
+
+  leftButton.addEventListener("touchstart", () => {
+    cursors.left.isDown = true;
+  });
+  leftButton.addEventListener("touchend", () => {
+    cursors.left.isDown = false;
+  });
+
+  rightButton.addEventListener("touchstart", () => {
+    cursors.right.isDown = true;
+  });
+  rightButton.addEventListener("touchend", () => {
+    cursors.right.isDown = false;
+  });
+
+  jumpButton.addEventListener("touchstart", () => {
+    cursors.up.isDown = true;
+  });
+  jumpButton.addEventListener("touchend", () => {
+    cursors.up.isDown = false;
+  });
 }
 
 function update() {
@@ -142,6 +173,7 @@ function update() {
   if (cursors.up.isDown && player.body.onFloor()) {
     player.setVelocityY(-200);
     sounds.jump.play();
+    cursors.up.isDown = false; // 모바일에서 점프 후 버튼을 떼기 위해
   }
 
   if (score > level * 100) {

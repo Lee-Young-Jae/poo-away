@@ -16,11 +16,44 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
+        width: 100vw;
+      }
+
+      #virtual-joystick {
+        position: fixed;
+        bottom: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        justify-content: space-between;
+        width: 50%;
+      }
+
+      #virtual-joystick button {
+        background-color: rgba(255, 255, 255, 0.5);
+        border: none;
+        padding: 20px;
+        margin: 10px;
+        font-size: 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        outline: none;
+        user-select: none;
+      }
+
+      #virtual-joystick button:active {
+        background-color: rgba(255, 255, 255, 0.8);
       }
     </style>
   </head>
   <body>
+    <div id="virtual-joystick">
+      <button id="left-button">⬅️</button>
+      <button id="jump-button">⬆️</button>
+      <button id="right-button">➡️</button>
+    </div>
     <div id="game-container"></div>
+
     <script src="index.js"></script>
   </body>
 </html>
