@@ -6,6 +6,8 @@ class InputManager {
     if (!scene.sys.game.device.os.desktop) {
       this.addVirtualJoystick();
     }
+
+    this.jumpPressed = false;
   }
 
   addVirtualJoystick() {
@@ -28,8 +30,15 @@ class InputManager {
     });
 
     jumpButton.addEventListener("touchstart", () => {
-      this.cursors.up.isDown = true;
+      if (!this.jumpPressed) {
+        this.cursors.up.isDown = true;
+        this.jumpPressed = true;
+        setTimeout(() => {
+          this.jumpPressed = false;
+        }, 200);
+      }
     });
+
     jumpButton.addEventListener("touchend", () => {
       this.cursors.up.isDown = false;
     });

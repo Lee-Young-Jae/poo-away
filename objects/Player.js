@@ -55,6 +55,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         Phaser.Input.Keyboard.JustDown(cursors.space))
     ) {
       if (this.body.onFloor() || (this.allowDoubleJump && this.jumps < 2)) {
+        console.log("jump");
         this.jump();
       }
     } else if (
