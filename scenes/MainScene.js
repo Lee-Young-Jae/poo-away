@@ -380,8 +380,8 @@ class MainScene extends Phaser.Scene {
       );
     } else if (powerUp.type === 3) {
       const poops = this.obstacles.poops.getChildren().length;
-      this.coins += poops * 10;
-      this.score += poops * 10;
+      this.coins += Math.floor(poops / 2);
+      this.score += poops * 5;
       this.scoreText.setText("Score: " + this.score);
       this.soundManager.play("collect");
       localStorage.setItem("coins", this.coins.toString());
