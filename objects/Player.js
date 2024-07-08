@@ -49,12 +49,20 @@ class Player extends Phaser.Physics.Arcade.Sprite {
       this.setVelocityX(0);
     }
 
-    if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
-      if (this.body.onFloor()) {
-        this.jump();
-      } else if (this.allowDoubleJump && this.jumps < 2) {
+    if (
+      this.scene.sys.game.device.os.desktop &&
+      (Phaser.Input.Keyboard.JustDown(cursors.up) ||
+        Phaser.Input.Keyboard.JustDown(cursors.space))
+    ) {
+      if (this.body.onFloor() || (this.allowDoubleJump && this.jumps < 2)) {
         this.jump();
       }
+    } else if (
+      !this.scene.sys.game.device.os.desktop &&
+      cursors.up.isDown &&
+      (this.body.onFloor() || (this.allowDoubleJump && this.jumps < 2))
+    ) {
+      this.jump();
     }
 
     // 땅에 닿았을 때 점프 횟수 리셋
