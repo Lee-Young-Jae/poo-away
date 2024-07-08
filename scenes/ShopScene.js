@@ -4,8 +4,10 @@ class ShopScene extends Phaser.Scene {
     this.coins = 0;
     this.colorPurchases = [];
     this.characterPurchases = [];
+    this.specialPurchases = [];
     this.currentColor = null;
     this.currentCharacter = null;
+    this.currentSpecial = null;
   }
 
   init(data) {
@@ -16,12 +18,8 @@ class ShopScene extends Phaser.Scene {
     const width = this.scale.width;
     const height = this.scale.height;
     const centerX = width / 2;
-
-    this.add
-      .text(centerX, height * 0.05, "Shop", { fontSize: this.getFontSize(32) })
-      .setOrigin(0.5);
     this.coinsText = this.add
-      .text(centerX, height * 0.1, `Coins: ${this.coins}`, {
+      .text(centerX, height * 0.05, `Coins: ${this.coins.toLocaleString()}`, {
         fontSize: this.getFontSize(24),
       })
       .setOrigin(0.5);
@@ -29,21 +27,22 @@ class ShopScene extends Phaser.Scene {
     this.loadPurchases();
 
     const colorItems = [
-      { name: "Default", price: 0, key: "default" },
-      { name: "Blue", price: 100, key: "blue" },
-      { name: "Green", price: 150, key: "green" },
-      { name: "Red", price: 200, key: "red" },
+      { name: "마젠타", price: 250, key: "magenta" },
+      { name: "오랑게", price: 350, key: "orange" },
     ];
-
     const characterItems = [
-      { name: "Default", price: 0, key: "player" },
       { name: "모험가", price: 300, key: "adventurer" },
-      { name: "???", price: 1000, key: "knight" },
+      { name: "기사", price: 500, key: "knight" },
+      { name: "???", price: 1000, key: "mystery" },
+    ];
+    const specialItems = [
+      { name: "사이즈업", price: 5, key: "sizeUp" },
+      { name: "스피드업", price: 200, key: "speedUp" },
     ];
 
     const colorItemsY = height * 0.15;
     this.add
-      .text(centerX, colorItemsY, "Colors", { fontSize: this.getFontSize(24) })
+      .text(centerX, colorItemsY, "색상", { fontSize: this.getFontSize(24) })
       .setOrigin(0.5);
     this.createShopItems(
       colorItems,
@@ -56,7 +55,7 @@ class ShopScene extends Phaser.Scene {
     const characterItemsY =
       colorItemsY + (colorItems.length + 1) * height * 0.07;
     this.add
-      .text(centerX, characterItemsY, "Characters", {
+      .text(centerX, characterItemsY, "캐릭터", {
         fontSize: this.getFontSize(24),
       })
       .setOrigin(0.5);
@@ -66,6 +65,21 @@ class ShopScene extends Phaser.Scene {
       characterItemsY + height * 0.05,
       this.characterPurchases,
       (item) => this.buyCharacter(item)
+    );
+
+    const specialItemsY =
+      characterItemsY + (characterItems.length + 1) * height * 0.07;
+    this.add
+      .text(centerX, specialItemsY, "Specials", {
+        fontSize: this.getFontSize(24),
+      })
+      .setOrigin(0.5);
+    this.createShopItems(
+      specialItems,
+      centerX,
+      specialItemsY + height * 0.05,
+      this.specialPurchases,
+      (item) => this.buySpecial(item)
     );
 
     this.add
@@ -103,7 +117,9 @@ class ShopScene extends Phaser.Scene {
       if (
         (item.key === this.currentColor && purchases === this.colorPurchases) ||
         (item.key === this.currentCharacter &&
-          purchases === this.characterPurchases)
+          purchases === this.characterPurchases) ||
+        (this.currentSpecial.includes(item.key) &&
+          purchases === this.specialPurchases)
       ) {
         buyButton.setText("Selected").setColor("#0000ff");
       }
@@ -115,12 +131,16 @@ class ShopScene extends Phaser.Scene {
       this.scale.width / 800,
       this.scale.height / 600
     );
-    return Math.max(Math.floor(baseSize * scaleFactor), 12) + "px";
+    return Math.max(Math.floor(baseSize * scaleFactor), 10) + "px";
   }
 
   buyColor(item) {
     if (this.colorPurchases.includes(item.key)) {
-      this.currentColor = item.key;
+      if (this.currentColor === item.key) {
+        this.currentColor = "default";
+      } else {
+        this.currentColor = item.key;
+      }
       this.saveSelections();
       this.scene.restart();
     } else if (this.coins >= item.price) {
@@ -135,7 +155,11 @@ class ShopScene extends Phaser.Scene {
 
   buyCharacter(item) {
     if (this.characterPurchases.includes(item.key)) {
-      this.currentCharacter = item.key;
+      if (this.currentCharacter === item.key) {
+        this.currentCharacter = "player";
+      } else {
+        this.currentCharacter = item.key;
+      }
       this.saveSelections();
       this.scene.restart();
     } else if (this.coins >= item.price) {
@@ -148,19 +172,47 @@ class ShopScene extends Phaser.Scene {
     }
   }
 
+  buySpecial(item) {
+    if (this.specialPurchases.includes(item.key)) {
+      if (this.currentSpecial.includes(item.key)) {
+        this.currentSpecial = this.currentSpecial.filter(
+          (special) => special !== item.key
+        );
+      } else {
+        this.currentSpecial.push(item.key);
+      }
+      this.saveSelections();
+      this.scene.restart();
+    } else if (this.coins >= item.price) {
+      this.coins -= item.price;
+      this.specialPurchases.push(item.key);
+      this.currentSpecial.push(item.key);
+      this.savePurchases();
+      this.saveSelections();
+      this.scene.restart();
+    }
+  }
+
   loadPurchases() {
     const savedColorPurchases = localStorage.getItem("colorPurchases");
     this.colorPurchases = savedColorPurchases
       ? JSON.parse(savedColorPurchases)
-      : ["green"];
+      : ["default"];
 
     const savedCharacterPurchases = localStorage.getItem("characterPurchases");
     this.characterPurchases = savedCharacterPurchases
       ? JSON.parse(savedCharacterPurchases)
       : ["player"];
 
-    this.currentColor = localStorage.getItem("currentColor") || "green";
+    const savedSpecialPurchases = localStorage.getItem("specialPurchases");
+    this.specialPurchases = savedSpecialPurchases
+      ? JSON.parse(savedSpecialPurchases)
+      : ["default"];
+
+    this.currentColor = localStorage.getItem("currentColor") || "default";
     this.currentCharacter = localStorage.getItem("currentCharacter") || "";
+    const savedSpecial = localStorage.getItem("currentSpecial");
+    this.currentSpecial = savedSpecial ? JSON.parse(savedSpecial) : [];
   }
 
   savePurchases() {
@@ -169,11 +221,16 @@ class ShopScene extends Phaser.Scene {
       "characterPurchases",
       JSON.stringify(this.characterPurchases)
     );
+    localStorage.setItem(
+      "specialPurchases",
+      JSON.stringify(this.specialPurchases)
+    );
     localStorage.setItem("coins", this.coins.toString());
   }
 
   saveSelections() {
     localStorage.setItem("currentColor", this.currentColor);
     localStorage.setItem("currentCharacter", this.currentCharacter);
+    localStorage.setItem("currentSpecial", JSON.stringify(this.currentSpecial));
   }
 }

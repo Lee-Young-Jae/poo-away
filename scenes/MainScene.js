@@ -30,6 +30,10 @@ class MainScene extends Phaser.Scene {
       frameWidth: 120,
       frameHeight: 80,
     });
+    this.load.spritesheet("mystery", "./assets/mystery-32x32x72.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
 
     this.load.audio("jump", "./assets/sounds/jump.mp3");
     this.load.audio("collect", "./assets/sounds/collect.mp3");
@@ -130,6 +134,16 @@ class MainScene extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers("knight", {
         start: 0,
         end: 11,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "run-mystery",
+      frames: this.anims.generateFrameNumbers("mystery", {
+        start: 40,
+        end: 47,
       }),
       frameRate: 10,
       repeat: -1,
@@ -239,16 +253,30 @@ class MainScene extends Phaser.Scene {
     const currentColor = localStorage.getItem("currentColor") || "default";
     const currentCharacter =
       localStorage.getItem("currentCharacter") || "player";
+    const currentSpecial =
+      JSON.parse(localStorage.getItem("currentSpecial")) || [];
 
     switch (currentColor) {
-      case "blue":
-        this.player.setTint(0x0000ff);
+      case "magenta":
+        this.player.setTint(0xff00ff);
         break;
-      case "red":
-        this.player.setTint(0xff0000);
+      case "yellow":
+        this.player.setTint(0xffff00);
         break;
-      case "green":
-        this.player.setTint(0x00ff00);
+      case "orange":
+        this.player.setTint(0xffa500);
+        break;
+      case "purple":
+        this.player.setTint(0x800080);
+        break;
+      case "gray":
+        this.player.setTint(0x808080);
+        break;
+      case "sky":
+        this.player.setTint(0x87ceeb);
+        break;
+      case "brown":
+        this.player.setTint(0xa52a2a);
         break;
       default:
         this.player.clearTint();
@@ -257,7 +285,6 @@ class MainScene extends Phaser.Scene {
 
     this.player.setTexture(currentCharacter);
 
-    // 기본 애니메이션을 멈추고, 선택한 캐릭터에 맞는 애니메이션을 시작
     this.player.anims.stop();
 
     if (currentCharacter === "adventurer") {
@@ -267,6 +294,22 @@ class MainScene extends Phaser.Scene {
     if (currentCharacter === "knight") {
       this.player.play("run-knight");
       this.player.setOffset(35, 40);
+    }
+
+    if (currentCharacter === "mystery") {
+      this.player.play("run-mystery");
+      this.player.setOffset(10, 10);
+      this.player.setScale(1.2);
+    }
+
+    // sizeUp 상태일 경우 가로 크기를 1.5배로 키움
+    if (currentSpecial.includes("sizeUp")) {
+      this.player.setScale(1.5);
+    }
+
+    // speedUp 상태일 경우 속도를 1.5배로 키움
+    if (currentSpecial.includes("speedUp")) {
+      this.player.speedUp();
     }
 
     this.gameOver = false;
