@@ -17,6 +17,10 @@ class MainScene extends Phaser.Scene {
     );
     this.load.image("poop", "./assets/poo.png");
     this.load.image("star", "./assets/star.png");
+    // this.load.spritesheet("foods", "./assets/foods-16x16x64.png", {
+    //   frameWidth: 16,
+    //   frameHeight: 16,
+    // });
     this.load.spritesheet("coin", "./assets/coin-16x16x4.png", {
       frameWidth: 16,
       frameHeight: 16,
@@ -200,7 +204,7 @@ class MainScene extends Phaser.Scene {
 
     const additionalDrop = Math.floor(this.level / 2);
     for (let i = 0; i < additionalDrop; i++) {
-      if (Phaser.Math.Between(1, 3) === 1 || this.isFeverTime) {
+      if (Phaser.Math.Between(1, 3) === 1 && !this.isFeverTime) {
         this.obstacles.dropPoop();
       } else {
         this.obstacles.dropCoin();
@@ -209,34 +213,39 @@ class MainScene extends Phaser.Scene {
   }
 
   hitPoop(player, poop) {
-    if (!this.powerUpActive) {
-      this.physics.pause();
-      player.setTint(0xff0000);
-      this.soundManager.play("hit");
-      this.gameOver = true;
-      this.add
-        .text(
-          this.game.config.width / 2,
-          this.game.config.height / 2,
-          "Game Over",
-          {
-            fontSize: "64px",
-            fill: "#fff",
-          }
-        )
-        .setOrigin(0.5);
-
-      if (this.score > this.highScore) {
-        this.highScore = this.score;
-        localStorage.setItem("highScore", this.highScore);
-        this.highScoreText.setText("High Score: " + this.highScore);
-      }
-      this.soundManager.stop("bgm");
-      this.soundManager.stop("feverbgm");
-      this.time.removeAllEvents();
-    } else {
+    if (this.powerUpActive) {
       poop.destroy();
+      // 점수를 올린다
+      this.score += 10;
+      this.scoreText.setText("Score: " + this.score);
+      this.soundManager.play("collect");
+      return;
     }
+
+    this.physics.pause();
+    player.setTint(0xff0000);
+    this.soundManager.play("hit");
+    this.gameOver = true;
+    this.add
+      .text(
+        this.game.config.width / 2,
+        this.game.config.height / 2,
+        "Game Over",
+        {
+          fontSize: "64px",
+          fill: "#fff",
+        }
+      )
+      .setOrigin(0.5);
+
+    if (this.score > this.highScore) {
+      this.highScore = this.score;
+      localStorage.setItem("highScore", this.highScore);
+      this.highScoreText.setText("High Score: " + this.highScore);
+    }
+    this.soundManager.stop("bgm");
+    this.soundManager.stop("feverbgm");
+    this.time.removeAllEvents();
   }
 
   collectCoin(player, coin) {
@@ -289,17 +298,23 @@ class MainScene extends Phaser.Scene {
 
     if (currentCharacter === "adventurer") {
       this.player.play("run-adv");
+      this.player.setAllowJumpAcceleration();
     }
 
     if (currentCharacter === "knight") {
       this.player.play("run-knight");
       this.player.setOffset(35, 40);
+      this.player.jumpHigher();
+      this.player.setAllowJumpAcceleration();
     }
 
     if (currentCharacter === "mystery") {
       this.player.play("run-mystery");
       this.player.setOffset(10, 10);
       this.player.setScale(1.2);
+      this.player.jumpHigher();
+      this.player.setAllowJumpAcceleration();
+      this.player.setAllowDoubleJump();
     }
 
     // sizeUp 상태일 경우 가로 크기를 1.5배로 키움
@@ -350,7 +365,14 @@ class MainScene extends Phaser.Scene {
         this
       );
     } else if (powerUp.type === 3) {
+      const poops = this.obstacles.poops.getChildren().length;
+      this.coins += poops * 10;
+      this.score += poops * 10;
+      this.scoreText.setText("Score: " + this.score);
+      this.soundManager.play("collect");
+      localStorage.setItem("coins", this.coins.toString());
       this.obstacles.poops.clear(true, true);
+
       this.endPowerUp();
     } else {
       if (this.powerUpTimer) this.powerUpTimer.remove();
@@ -373,25 +395,13 @@ class MainScene extends Phaser.Scene {
     this.level++;
     this.levelText.setText("Level: " + this.level);
 
-    // 피버타임 중이면 dropInterval과 이벤트 초기화를 건너뛰도록 변경 (어짜피 피버 타임이 끝날 때 초기화됨)
     this.dropInterval -= 100;
-    if (!this.isFeverTime) {
-      if (this.dropInterval < 500) this.dropInterval = 500;
-      this.time.removeAllEvents();
-      this.time.addEvent({
-        delay: this.dropInterval,
-        callback: this.dropObjects,
-        callbackScope: this,
-        loop: true,
-      });
-    }
+    if (this.dropInterval < 500) this.dropInterval = 500;
   }
 
   startFeverTime() {
     this.soundManager.stop("bgm");
     this.soundManager.play("feverbgm", { loop: true });
-
-    this.obstacles.powerUps.clear(true, true);
 
     this.isFeverTime = true;
     const feverInterval = 500;

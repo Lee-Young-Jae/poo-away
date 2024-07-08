@@ -36,6 +36,18 @@ class Obstacles {
     const powerUpType = Phaser.Math.Between(1, 3);
     const powerUp = this.powerUps.create(x, 0, "star");
     powerUp.type = powerUpType;
+    // type에 따라, tint를 다르게 설정
+    switch (powerUpType) {
+      case 1:
+        powerUp.tint = 0x00ff00;
+        break;
+      case 2:
+        powerUp.tint = 0xff0000;
+        break;
+      case 3:
+        powerUp.tint = 0xfeff00;
+        break;
+    }
     powerUp.setBounce(0.7);
     powerUp.setCollideWorldBounds(false);
     powerUp.setVelocity(Phaser.Math.Between(-50, 50), 50);
