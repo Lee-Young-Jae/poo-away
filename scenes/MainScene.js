@@ -21,7 +21,15 @@ class MainScene extends Phaser.Scene {
       frameWidth: 16,
       frameHeight: 16,
     });
-    this.load.image("boss", "./assets/boss.png");
+    // this.load.image("boss", "./assets/boss.png");
+    this.load.spritesheet("adventurer", "./assets/adventurer-50x37x6.png", {
+      frameWidth: 50,
+      frameHeight: 37,
+    });
+    this.load.spritesheet("knight", "./assets/knight-120x80x12.png", {
+      frameWidth: 120,
+      frameHeight: 80,
+    });
 
     this.load.audio("jump", "./assets/sounds/jump.mp3");
     this.load.audio("collect", "./assets/sounds/collect.mp3");
@@ -31,6 +39,15 @@ class MainScene extends Phaser.Scene {
     this.load.audio("boss", "./assets/sounds/boss.mp3");
     this.load.audio("bgm", "./assets/sounds/backgroundSound.mp3");
     this.load.audio("feverbgm", "./assets/sounds/feverTime.mp3");
+  }
+
+  init(data) {
+    if (data.coins !== undefined) {
+      this.coins = data.coins;
+    } else {
+      const savedCoins = localStorage.getItem("coins");
+      this.coins = savedCoins ? parseInt(savedCoins) : 0;
+    }
   }
 
   create() {
@@ -98,6 +115,45 @@ class MainScene extends Phaser.Scene {
       repeat: -1,
     });
 
+    this.anims.create({
+      key: "run-adv",
+      frames: this.anims.generateFrameNumbers("adventurer", {
+        start: 0,
+        end: 5,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "run-knight",
+      frames: this.anims.generateFrameNumbers("knight", {
+        start: 0,
+        end: 11,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.add
+      .text(this.game.config.width - 100, 20, "Shop", {
+        fontSize: "24px",
+        fill: "#fff",
+      })
+      .setInteractive()
+      .on("pointerdown", () =>
+        this.scene.start("ShopScene", { coins: this.coins })
+      );
+
+    // 구매한 캐릭터 적용
+    this.loadCharacter();
+
+    // 상점에서 캐릭터를 변경한 경우, 애니메이션을 다시 시작하기 위함
+    this.events.on("resume", (scene, data) => {
+      this.loadCharacter();
+    });
+
+    // 모바일 환경에 맞게 조정
     this.adjustForMobile();
   }
 
@@ -116,7 +172,7 @@ class MainScene extends Phaser.Scene {
   }
 
   dropObjects() {
-    if (Phaser.Math.Between(1, 10) === 1) {
+    if (Phaser.Math.Between(1, 10) === 1 && !this.isFeverTime) {
       this.obstacles.dropPowerUp();
     } else if (Phaser.Math.Between(1, 4) === 1 || this.isFeverTime) {
       this.obstacles.dropCoin();
@@ -169,7 +225,53 @@ class MainScene extends Phaser.Scene {
     coin.disableBody(true, true);
     this.score += 10;
     this.scoreText.setText("Score: " + this.score);
+    this.coins += 1;
     this.soundManager.play("collect");
+    localStorage.setItem("coins", this.coins.toString());
+  }
+
+  loadCharacter() {
+    this.coins = parseInt(localStorage.getItem("coins")) || 0;
+    const currentColor = localStorage.getItem("currentColor") || "default";
+    const currentCharacter =
+      localStorage.getItem("currentCharacter") || "player";
+
+    switch (currentColor) {
+      case "blue":
+        this.player.setTint(0x0000ff);
+        break;
+      case "red":
+        this.player.setTint(0xff0000);
+        break;
+      case "green":
+        this.player.setTint(0x00ff00);
+        break;
+      default:
+        this.player.clearTint();
+        break;
+    }
+
+    this.player.setTexture(currentCharacter);
+
+    // 기본 애니메이션을 멈추고, 선택한 캐릭터에 맞는 애니메이션을 시작
+    this.player.anims.stop();
+
+    if (currentCharacter === "adventurer") {
+      this.player.play("run-adv");
+    }
+
+    if (currentCharacter === "knight") {
+      this.player.play("run-knight");
+      this.player.setOffset(35, 40);
+    }
+
+    this.gameOver = false;
+    this.score = 0;
+    this.scoreText.setText("Score: 0");
+    this.level = 1;
+    this.levelText.setText("Level: 1");
+    this.dropInterval = 1000;
+    this.time.removeAllEvents();
   }
 
   collectStar(player, star) {
@@ -252,6 +354,8 @@ class MainScene extends Phaser.Scene {
     this.soundManager.stop("bgm");
     this.soundManager.play("feverbgm", { loop: true });
 
+    this.obstacles.powerUps.clear(true, true);
+
     this.isFeverTime = true;
     this.dropInterval = 500;
 
@@ -291,20 +395,6 @@ class MainScene extends Phaser.Scene {
   adjustForMobile() {
     if (!this.sys.game.device.os.desktop) {
       this.scale.resize(window.innerWidth, window.innerHeight);
-
-      this.scoreText.setFontSize(24);
-      this.highScoreText.setFontSize(24);
-      this.levelText.setFontSize(24);
-
-      const joystick = document.getElementById("virtual-joystick");
-      joystick.style.width = "80%";
-      joystick.style.bottom = "5%";
-
-      const buttons = joystick.getElementsByTagName("button");
-      for (let button of buttons) {
-        button.style.padding = "15px";
-        button.style.fontSize = "16px";
-      }
     }
   }
 }

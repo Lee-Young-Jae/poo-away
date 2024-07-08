@@ -10,5 +10,5 @@ const config = {
       debug: false,
     },
   },
-  scene: MainScene,
+  scene: [MainScene, ShopScene],
 };

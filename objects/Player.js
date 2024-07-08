@@ -3,14 +3,15 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     super(scene, x, y, "player");
     scene.add.existing(this);
     scene.physics.add.existing(this);
-
     this.setCollideWorldBounds(true);
   }
 
   update(cursors, powerUpActive) {
     if (cursors.left.isDown) {
+      this.flipX = true;
       this.setVelocityX(powerUpActive ? -240 : -160);
     } else if (cursors.right.isDown) {
+      this.flipX = false;
       this.setVelocityX(powerUpActive ? 240 : 160);
     } else {
       this.setVelocityX(0);
