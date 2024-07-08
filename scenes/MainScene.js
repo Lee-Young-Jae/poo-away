@@ -237,6 +237,20 @@ class MainScene extends Phaser.Scene {
         }
       )
       .setOrigin(0.5);
+    // 재시작 버튼
+    this.add
+      .text(
+        this.game.config.width / 2,
+        this.game.config.height / 2 + 100,
+        "Restart",
+        {
+          fontSize: "32px",
+          fill: "#fff",
+        }
+      )
+      .setOrigin(0.5)
+      .setInteractive()
+      .on("pointerdown", () => this.scene.restart());
 
     if (this.score > this.highScore) {
       this.highScore = this.score;
