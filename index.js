@@ -124,6 +124,7 @@ function create() {
     repeat: -1,
   });
 
+  adjustForMobile.call(this);
   if (!this.sys.game.device.os.desktop) {
     addVirtualJoystick();
   }
@@ -154,6 +155,29 @@ function addVirtualJoystick() {
   jumpButton.addEventListener("touchend", () => {
     cursors.up.isDown = false;
   });
+}
+
+function adjustForMobile() {
+  if (!this.sys.game.device.os.desktop) {
+    // 화면 크기 조정
+    this.scale.resize(window.innerWidth, window.innerHeight);
+
+    // 텍스트 크기 조정
+    scoreText.setFontSize(24);
+    highScoreText.setFontSize(24);
+    levelText.setFontSize(24);
+
+    // 조이스틱 위치 및 크기 조정
+    const joystick = document.getElementById("virtual-joystick");
+    joystick.style.width = "80%";
+    joystick.style.bottom = "5%";
+
+    const buttons = joystick.getElementsByTagName("button");
+    for (let button of buttons) {
+      button.style.padding = "15px";
+      button.style.fontSize = "16px";
+    }
+  }
 }
 
 function update() {
@@ -246,8 +270,12 @@ function hitPoop(player, poop) {
     sounds.hit.play();
     gameOver = true;
     this.add
-      .text(400, 300, "Game Over", { fontSize: "64px", fill: "#fff" })
+      .text(window.innerWidth / 2, window.innerHeight / 2, "Game Over", {
+        fontSize: "64px",
+        fill: "#fff",
+      })
       .setOrigin(0.5);
+
     if (score > highScore) {
       highScore = score;
       localStorage.setItem("highScore", highScore);

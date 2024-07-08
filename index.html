@@ -9,6 +9,7 @@
       body {
         margin: 0;
         padding: 0;
+        font-size: 16px;
       }
 
       #game-container {
@@ -27,6 +28,8 @@
         display: flex;
         justify-content: space-between;
         width: 50%;
+        padding: 20px;
+        font-size: 20px;
       }
 
       #virtual-joystick button {
@@ -43,6 +46,25 @@
 
       #virtual-joystick button:active {
         background-color: rgba(255, 255, 255, 0.8);
+      }
+
+      @media (max-width: 768px) {
+        body {
+          font-size: 12px;
+        }
+
+        #virtual-joystick {
+          width: 80%;
+        }
+
+        #virtual-joystick button {
+          padding: 15px;
+          font-size: 16px;
+        }
+
+        .game-text {
+          font-size: 20px;
+        }
       }
     </style>
   </head>
