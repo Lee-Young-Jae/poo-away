@@ -266,7 +266,7 @@ class MainScene extends Phaser.Scene {
     coin.disableBody(true, true);
     this.score += 10;
     this.scoreText.setText("Score: " + this.score);
-    this.coins += 1;
+    this.coins += 1000;
     this.soundManager.play("collect");
     localStorage.setItem("coins", this.coins.toString());
   }
