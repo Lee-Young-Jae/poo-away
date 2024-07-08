@@ -58,7 +58,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.jump();
       }
     } else if (
-      !this.scene.sys.game.device.os.desktop &&
       cursors.up.isDown &&
       (this.body.onFloor() || (this.allowDoubleJump && this.jumps < 2))
     ) {
