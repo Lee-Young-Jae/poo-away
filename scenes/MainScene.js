@@ -348,6 +348,7 @@ class MainScene extends Phaser.Scene {
     this.levelText.setText("Level: 1");
     this.dropInterval = 1000;
     this.time.removeAllEvents();
+    this.soundManager.play("bgm", { loop: true, volume: 0.5 });
   }
 
   collectStar(player, star) {
@@ -439,7 +440,7 @@ class MainScene extends Phaser.Scene {
 
   endFeverTime() {
     this.soundManager.stop("feverbgm");
-    this.soundManager.play("bgm", { loop: true });
+    this.soundManager.play("bgm", { loop: true, volume: 0.5 });
 
     this.isFeverTime = false;
     this.time.removeAllEvents();
