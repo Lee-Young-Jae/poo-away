@@ -186,10 +186,10 @@ class MainScene extends Phaser.Scene {
 
     const additionalDrop = Math.floor(this.level / 2);
     for (let i = 0; i < additionalDrop; i++) {
-      if (Phaser.Math.Between(1, 2) === 1 || this.isFeverTime) {
-        this.obstacles.dropCoin();
-      } else {
+      if (Phaser.Math.Between(1, 3) === 1 || this.isFeverTime) {
         this.obstacles.dropPoop();
+      } else {
+        this.obstacles.dropCoin();
       }
     }
   }
