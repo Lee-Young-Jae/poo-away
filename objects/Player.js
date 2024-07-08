@@ -9,6 +9,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.allowJumpAcceleration = false;
     this.allowDoubleJump = false;
     this.jumps = 0;
+    this.jumpPressed = false;
   }
 
   speedUp() {
@@ -50,19 +51,18 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     if (
-      this.scene.sys.game.device.os.desktop &&
-      (Phaser.Input.Keyboard.JustDown(cursors.up) ||
-        Phaser.Input.Keyboard.JustDown(cursors.space))
+      Phaser.Input.Keyboard.JustDown(cursors.up) ||
+      Phaser.Input.Keyboard.JustDown(cursors.space)
     ) {
       if (this.body.onFloor() || (this.allowDoubleJump && this.jumps < 2)) {
-        console.log("jump");
-        this.jump();
+        this.jumps = this.jump();
       }
     } else if (
       cursors.up.isDown &&
+      !this.jumpPressed &&
       (this.body.onFloor() || (this.allowDoubleJump && this.jumps < 2))
     ) {
-      this.jump();
+      this.jumps = this.jump();
     }
 
     // 땅에 닿았을 때 점프 횟수 리셋
@@ -72,8 +72,18 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   jump() {
+    if (this.jumpPressed) {
+      return this.jumps;
+    }
+    this.jumpPressed = true;
     this.setVelocityY(this.jumpSpeed);
     this.scene.soundManager.play("jump");
     this.jumps++;
+
+    setTimeout(() => {
+      this.jumpPressed = false;
+    }, 300);
+
+    return this.jumps;
   }
 }

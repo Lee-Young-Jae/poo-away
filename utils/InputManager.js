@@ -32,10 +32,12 @@ class InputManager {
     jumpButton.addEventListener("touchstart", () => {
       if (!this.jumpPressed) {
         this.cursors.up.isDown = true;
+        console.log("jumpPressed");
         this.jumpPressed = true;
         setTimeout(() => {
           this.jumpPressed = false;
-        }, 200);
+          console.log("jumpPressed reset");
+        }, 300);
       }
     });
 
