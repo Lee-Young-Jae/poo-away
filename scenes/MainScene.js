@@ -166,7 +166,11 @@ class MainScene extends Phaser.Scene {
       this.levelUp();
     }
 
-    if (!this.isFeverTime && Phaser.Math.Between(1, 5000) === 1) {
+    if (
+      !this.isFeverTime &&
+      !this.powerUpActive &&
+      Phaser.Math.Between(1, 5000) === 1
+    ) {
       this.startFeverTime();
     }
   }
@@ -325,28 +329,18 @@ class MainScene extends Phaser.Scene {
   levelUp() {
     this.level++;
     this.levelText.setText("Level: " + this.level);
+
+    // 피버타임 중이면 dropInterval과 이벤트 초기화를 건너뛰도록 변경 (어짜피 피버 타임이 끝날 때 초기화됨)
     this.dropInterval -= 100;
-    if (this.dropInterval < 500) this.dropInterval = 500;
-
-    this.time.removeAllEvents();
-
-    this.time.addEvent({
-      delay: this.dropInterval,
-      callback: this.dropObjects,
-      callbackScope: this,
-      loop: true,
-    });
-
-    if (this.isFeverTime) {
-      if (this.feverTimeTimer) {
-        this.feverTimeTimer.remove();
-        this.feverTimeTimer = this.time.delayedCall(
-          10000,
-          this.endFeverTime,
-          [],
-          this
-        );
-      }
+    if (!this.isFeverTime) {
+      if (this.dropInterval < 500) this.dropInterval = 500;
+      this.time.removeAllEvents();
+      this.time.addEvent({
+        delay: this.dropInterval,
+        callback: this.dropObjects,
+        callbackScope: this,
+        loop: true,
+      });
     }
   }
 
@@ -357,11 +351,11 @@ class MainScene extends Phaser.Scene {
     this.obstacles.powerUps.clear(true, true);
 
     this.isFeverTime = true;
-    this.dropInterval = 500;
+    const feverInterval = 500;
 
     this.time.removeAllEvents();
     this.time.addEvent({
-      delay: this.dropInterval,
+      delay: feverInterval,
       callback: this.dropObjects,
       callbackScope: this,
       loop: true,
@@ -369,7 +363,7 @@ class MainScene extends Phaser.Scene {
 
     if (this.feverTimeTimer) this.feverTimeTimer.remove();
     this.feverTimeTimer = this.time.delayedCall(
-      10000,
+      Phaser.Math.Between(5000, 15000),
       this.endFeverTime,
       [],
       this
@@ -381,11 +375,9 @@ class MainScene extends Phaser.Scene {
     this.soundManager.play("bgm", { loop: true });
 
     this.isFeverTime = false;
-    this.dropInterval = 1000;
-
     this.time.removeAllEvents();
     this.time.addEvent({
-      delay: this.dropInterval,
+      delay: this.dropInterval, // 원래 dropInterval로 복구
       callback: this.dropObjects,
       callbackScope: this,
       loop: true,

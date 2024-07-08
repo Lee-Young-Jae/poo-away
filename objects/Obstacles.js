@@ -13,6 +13,8 @@ class Obstacles {
     const poop = this.poops.create(x, 0, "poop");
     poop.setBounce(0.7);
     poop.setCollideWorldBounds(false);
+    const scale = Phaser.Math.FloatBetween(0.2, 1.5);
+    poop.setScale(scale);
     poop.setVelocity(
       Phaser.Math.Between(-200, 200),
       20 + this.scene.level * 10

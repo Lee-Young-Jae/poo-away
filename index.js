@@ -6,7 +6,7 @@ document.addEventListener(
   function (e) {
     e.preventDefault();
   },
-  { passive: false }
+  { passive: false } // 스크롤 방지
 );
 
 document.getElementById("game-container").addEventListener(
@@ -14,5 +14,5 @@ document.getElementById("game-container").addEventListener(
   function (e) {
     e.preventDefault();
   },
-  { passive: false }
+  { passive: false } // 스크롤 방지
 );
