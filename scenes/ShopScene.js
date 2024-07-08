@@ -92,6 +92,18 @@ class ShopScene extends Phaser.Scene {
       .on("pointerdown", () =>
         this.scene.start("MainScene", { coins: this.coins })
       );
+
+    this.add
+      .text(
+        width * 0.95,
+        height * 0.95,
+        "Designed by Lee-Young-Jae, Game Version: 1.0.1.",
+        {
+          fontSize: this.getFontSize(8),
+        }
+      )
+      .setColor("#ff00ff")
+      .setOrigin(1);
   }
 
   createShopItems(items, centerX, startY, purchases, buyCallback) {

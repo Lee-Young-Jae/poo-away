@@ -65,15 +65,15 @@ class MainScene extends Phaser.Scene {
     this.inputManager = new InputManager(this);
 
     this.scoreText = this.add.text(16, 16, "Score: 0", {
-      fontSize: "32px",
+      fontSize: "20px",
       fill: "#fff",
     });
     this.highScoreText = this.add.text(16, 50, "High Score: 0", {
-      fontSize: "32px",
+      fontSize: "20px",
       fill: "#fff",
     });
     this.levelText = this.add.text(16, 84, "Level: 1", {
-      fontSize: "32px",
+      fontSize: "20px",
       fill: "#fff",
     });
 
