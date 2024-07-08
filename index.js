@@ -243,7 +243,7 @@ function dropObjects() {
 }
 
 function dropPoop() {
-  const x = Phaser.Math.Between(0, 800);
+  const x = Phaser.Math.Between(0, config.width);
   const poop = poops.create(x, 0, "poop");
   poop.setBounce(0.7);
   poop.setCollideWorldBounds(false);
@@ -251,7 +251,7 @@ function dropPoop() {
 }
 
 function dropCoin() {
-  const x = Phaser.Math.Between(0, 800);
+  const x = Phaser.Math.Between(0, config.width);
   const coin = coins.create(x, 0, "coin");
   coin.setBounce(0.7);
   coin.setCollideWorldBounds(false);
@@ -261,7 +261,7 @@ function dropCoin() {
 }
 
 function dropPowerUp() {
-  const x = Phaser.Math.Between(0, 800);
+  const x = Phaser.Math.Between(0, config.width);
   const powerUpType = Phaser.Math.Between(1, 3);
   let powerUp;
   if (powerUpType === 1) {
@@ -361,24 +361,18 @@ function levelUp() {
 
   this.time.removeAllEvents();
 
+  this.time.addEvent({
+    delay: dropInterval,
+    callback: dropObjects,
+    callbackScope: this,
+    loop: true,
+  });
+
   if (isFeverTime) {
-    this.time.addEvent({
-      delay: dropInterval,
-      callback: dropObjects,
-      callbackScope: this,
-      loop: true,
-    });
     if (feverTimeTimer) {
       feverTimeTimer.remove();
       feverTimeTimer = this.time.delayedCall(10000, endFeverTime, [], this);
     }
-  } else {
-    this.time.addEvent({
-      delay: dropInterval,
-      callback: dropObjects,
-      callbackScope: this,
-      loop: true,
-    });
   }
 }
 
