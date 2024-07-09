@@ -1,14 +1,17 @@
 # Poo Away
 
-## 체험하기
+## 🚀 체험하기
 
-[Demo - https://lee-young-jae.github.io/poo-away/](https://lee-young-jae.github.io/poo-away/)
+[플레이! - https://lee-young-jae.github.io/poo-away/](https://lee-young-jae.github.io/poo-away/)
 
-## 소개
+## 🙋 소개
 
 `Phaser.js`를 경험해보고자 재미삼아 만든 간단한 게임입니다.
 
-## 게임 방법
+## 🤖 게임 방법
+
+> [!TIP]
+> `⭐️`의 특수효과를 이용하면 더 높은 점수와 코인을 획득할 수 있습니다.
 
 ### 모바일
 
@@ -39,3 +42,25 @@
 - `🪙` 을 모아 상점을 이용하세요!
   - 상점에서는 `🪙`을 사용해 캐릭터를 구매할 수 있습니다.
   - 캐릭터는 능력치가 다릅니다.
+
+## 📁 폴더구조
+
+```bash
+📦poo-away
+ ┣ 📂assets
+ ┃ ┣ 📂sounds
+ ┣ 📂objects
+ ┃ ┣ 📜Obstacles.js
+ ┃ ┗ 📜Player.js
+ ┣ 📂scenes
+ ┃ ┣ 📜MainScene.js
+ ┃ ┗ 📜ShopScene.js
+ ┣ 📂utils
+ ┃ ┣ 📜InputManager.js
+ ┃ ┗ 📜SoundManager.js
+ ┣ 📜README.md
+ ┣ 📜config.js
+ ┣ 📜index.html
+ ┣ 📜index.js
+ ┗ 📜styles.css
+```
