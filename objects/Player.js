@@ -12,6 +12,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.jumpPressed = false;
   }
 
+  sizeUp() {
+    this.setScale(2);
+    this.setCollisionArea();
+  }
+
   speedUp() {
     this.speed *= 1.5;
   }

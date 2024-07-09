@@ -28,27 +28,27 @@ class ShopScene extends Phaser.Scene {
     this.loadPurchases();
 
     const colorItems = [
-      { name: "마젠타", price: 250, key: "magenta" },
-      { name: "오랑게", price: 350, key: "orange" },
+      { name: "마젠타", price: 50, key: "magenta" },
+      { name: "오랑게", price: 50, key: "orange" },
     ];
     const characterItems = [
-      { name: "모험가", price: 300, key: "adventurer" },
-      { name: "기사", price: 500, key: "knight" },
-      { name: "???", price: 1000, key: "mystery" },
+      { name: "모험가", price: 100, key: "adventurer" },
+      { name: "기사", price: 300, key: "knight" },
+      { name: "???", price: 700, key: "mystery" },
     ];
     const specialItems = [
-      { name: "사이즈업", price: 5, key: "sizeUp" },
-      { name: "스피드업", price: 200, key: "speedUp" },
+      { name: "사이즈업", price: 10, key: "sizeUp" },
+      { name: "스피드업", price: 50, key: "speedUp" },
     ];
 
-    const colorItemsY = height * 0.15;
+    const colorItemsY = height * 0.1;
     this.add
       .text(centerX, colorItemsY, "색상", { fontSize: this.getFontSize(24) })
       .setOrigin(0.5);
     this.createShopItems(
       colorItems,
       centerX,
-      colorItemsY + height * 0.05,
+      colorItemsY + height * 0.03,
       this.colorPurchases,
       (item) => this.buyColor(item)
     );
@@ -63,7 +63,7 @@ class ShopScene extends Phaser.Scene {
     this.createShopItems(
       characterItems,
       centerX,
-      characterItemsY + height * 0.05,
+      characterItemsY + height * 0.03,
       this.characterPurchases,
       (item) => this.buyCharacter(item)
     );
@@ -78,7 +78,7 @@ class ShopScene extends Phaser.Scene {
     this.createShopItems(
       specialItems,
       centerX,
-      specialItemsY + height * 0.05,
+      specialItemsY + height * 0.03,
       this.specialPurchases,
       (item) => this.buySpecial(item)
     );

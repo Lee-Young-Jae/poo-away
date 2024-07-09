@@ -159,15 +159,17 @@ class MainScene extends Phaser.Scene {
         fill: "#fff",
       })
       .setInteractive()
-      .on("pointerdown", () =>
-        this.scene.start("ShopScene", { coins: this.coins })
-      );
+      .on("pointerdown", () => {
+        this.soundManager.stop("bgm");
+        this.scene.start("ShopScene", { coins: this.coins });
+      });
 
     // 구매한 캐릭터 적용
     this.loadCharacter();
 
     // 상점에서 캐릭터를 변경한 경우, 애니메이션을 다시 시작하기 위함
     this.events.on("resume", (scene, data) => {
+      this.soundManager.play("bgm", { loop: true, volume: 0.5 });
       this.loadCharacter();
     });
 
@@ -314,7 +316,6 @@ class MainScene extends Phaser.Scene {
     }
 
     this.player.setTexture(currentCharacter);
-
     this.player.anims.stop();
 
     if (currentCharacter === "adventurer") {
@@ -343,7 +344,7 @@ class MainScene extends Phaser.Scene {
 
     // sizeUp 상태일 경우 가로 크기를 1.5배로 키움
     if (currentSpecial.includes("sizeUp")) {
-      this.player.setScale(1.5);
+      this.player.sizeUp();
     }
 
     // speedUp 상태일 경우 속도를 1.5배로 키움
@@ -358,7 +359,25 @@ class MainScene extends Phaser.Scene {
     this.levelText.setText("Level: 1");
     this.dropInterval = 1000;
     this.time.removeAllEvents();
-    this.soundManager.play("bgm", { loop: true, volume: 0.5 });
+
+    if (this.isFeverTime) {
+      this.endFeverTime();
+    }
+
+    // 파워업 중이었을 경우, 파워업 종료
+    if (this.powerUpActive) {
+      this.endPowerUp();
+    }
+
+    // 피버타임 타이머가 있을 경우, 삭제
+    if (this.feverTimeTimer) {
+      this.feverTimeTimer.remove();
+    }
+
+    // 파워업 타이머가 있을 경우, 삭제
+    if (this.powerUpTimer) {
+      this.powerUpTimer.remove();
+    }
   }
 
   collectStar(player, star) {

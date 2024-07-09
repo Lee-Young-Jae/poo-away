@@ -39,10 +39,11 @@ body {
 #virtual-joystick button {
   background-color: rgba(255, 255, 255, 0.5);
   border: none;
-  padding: 25px;
+  padding: 30px;
   margin: 10px;
-  font-size: 24px;
+  font-size: 30px;
   border-radius: 10px;
+  font-weight: bold;
   cursor: pointer;
   outline: none;
   user-select: none;
@@ -63,8 +64,10 @@ body {
   }
 
   #virtual-joystick button {
-    padding: 15px;
-    font-size: 16px;
+    font-size: 15px;
+    border-radius: 10px;
+    padding: 30px;
+    font-weight: bold;
   }
 
   .game-text {
