@@ -173,6 +173,13 @@ class MainScene extends Phaser.Scene {
 
     // 모바일 환경에 맞게 조정
     this.adjustForMobile();
+
+    this.physics.world.defaults.debugShowBody = true;
+    this.physics.world.defaults.debugShowStaticBody = true;
+    this.physics.world.defaults.debugBodyColor = 0xff00ff; // 충돌 영역 색상 설정
+
+    // this.physics.world.createDebugGraphic();
+    // this.physics.world.debugGraphic.setDepth(999);
   }
 
   update() {
@@ -313,13 +320,15 @@ class MainScene extends Phaser.Scene {
     if (currentCharacter === "adventurer") {
       this.player.play("run-adv");
       this.player.setAllowJumpAcceleration();
+      this.player.setCollisionArea();
     }
 
     if (currentCharacter === "knight") {
       this.player.play("run-knight");
-      this.player.setOffset(35, 40);
+      this.player.setOffset(35, 45);
       this.player.jumpHigher();
       this.player.setAllowJumpAcceleration();
+      // this.player.setCollisionArea();
     }
 
     if (currentCharacter === "mystery") {
@@ -329,6 +338,7 @@ class MainScene extends Phaser.Scene {
       this.player.jumpHigher();
       this.player.setAllowJumpAcceleration();
       this.player.setAllowDoubleJump();
+      this.player.setCollisionArea();
     }
 
     // sizeUp 상태일 경우 가로 크기를 1.5배로 키움

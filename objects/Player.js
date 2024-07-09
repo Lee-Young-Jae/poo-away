@@ -28,6 +28,17 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.allowDoubleJump = true;
   }
 
+  // 충돌 영역 조정
+  setCollisionArea() {
+    const width = this.width;
+    const height = this.height;
+
+    // Offset을 중앙으로 설정
+    const offsetX = (width - this.body.width) / 2;
+    const offsetY = (height - this.body.height) / 2;
+    this.body.setOffset(offsetX, offsetY);
+  }
+
   update(cursors, powerUpActive) {
     const isJumping = !this.body.onFloor();
     const jumpAcceleration = this.allowJumpAcceleration && isJumping ? 1.5 : 1;

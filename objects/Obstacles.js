@@ -19,6 +19,17 @@ class Obstacles {
       Phaser.Math.Between(-200, 200),
       20 + this.scene.level * 10
     );
+    this.setPoopCollisionArea(poop);
+  }
+
+  setPoopCollisionArea(poop) {
+    const width = poop.width * poop.scaleX;
+    const height = poop.height * poop.scaleY;
+
+    const collisionWidth = width * 0.4; // 원래 너비의 40%
+    const collisionHeight = height * 0.8; // 원래 높이의 80%
+
+    poop.body.setSize(collisionWidth, collisionHeight);
   }
 
   dropCoin() {
