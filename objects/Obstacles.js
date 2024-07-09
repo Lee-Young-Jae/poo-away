@@ -29,6 +29,11 @@ class Obstacles {
     const collisionWidth = width * 0.4; // 원래 너비의 40%
     const collisionHeight = height * 0.8; // 원래 높이의 80%
 
+    // 충돌 영역을 바닥에 맞추기 위해 offset 설정
+    const offsetX = (width - collisionWidth) / 2;
+    const offsetY = height - collisionHeight;
+    poop.body.setOffset(offsetX, offsetY);
+
     poop.body.setSize(collisionWidth, collisionHeight);
   }
 

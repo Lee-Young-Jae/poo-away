@@ -326,10 +326,10 @@ class MainScene extends Phaser.Scene {
 
     if (currentCharacter === "knight") {
       this.player.play("run-knight");
-      this.player.setOffset(35, 45);
+      this.player.setOffset(0, 0); // y 오프셋을 16으로 설정 (예시 값)
       this.player.jumpHigher();
       this.player.setAllowJumpAcceleration();
-      // this.player.setCollisionArea();
+      this.player.setCollisionArea();
     }
 
     if (currentCharacter === "mystery") {
