@@ -12,14 +12,10 @@ body {
   align-items: center;
   background-color: #2c2b2a;
   height: 100vh;
+  overflow: scroll;
 }
 
 #game-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 90vh;
-  width: 100vw;
   user-select: none;
 }
 
