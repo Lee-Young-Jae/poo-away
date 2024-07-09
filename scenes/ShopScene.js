@@ -97,7 +97,7 @@ class ShopScene extends Phaser.Scene {
       .text(
         width * 0.95,
         height * 0.95,
-        "Designed by Lee-Young-Jae, Game Version: 1.0.1.",
+        "Designed by Lee-Young-Jae, Game Version: 1.0.2.",
         {
           fontSize: this.getFontSize(8),
         }
