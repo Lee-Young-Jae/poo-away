@@ -384,8 +384,6 @@ class MainScene extends Phaser.Scene {
     star.destroy();
     this.powerUpActive = true;
     player.setTint(0x00ff00);
-    const scale = player.scaleX;
-    player.setScale(scale * 1.5);
     this.soundManager.play("powerup");
     if (this.powerUpTimer) this.powerUpTimer.remove();
     this.powerUpTimer = this.time.delayedCall(5000, this.endPowerUp, [], this);
@@ -395,8 +393,6 @@ class MainScene extends Phaser.Scene {
     powerUp.destroy();
     this.powerUpActive = true;
     player.setTint(0x00ff00);
-    const scale = player.scaleX;
-    player.setScale(scale * 1.5);
     this.soundManager.play("powerup");
     this.soundManager.play("powerupBgm", { loop: true });
 
