@@ -432,6 +432,7 @@ class MainScene extends Phaser.Scene {
     this.powerUpActive = false;
     this.soundManager.stop("powerupBgm");
     this.player.clearTint();
+    this.physics.world.timeScale = 1;
   }
 
   levelUp() {
