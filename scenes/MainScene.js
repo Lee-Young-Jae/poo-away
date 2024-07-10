@@ -38,6 +38,19 @@ class MainScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
+    this.load.spritesheet("samurai", "./assets/samurai-92x33x8.png", {
+      frameWidth: 92,
+      frameHeight: 33,
+    });
+
+    this.load.spritesheet(
+      "samurai_attack",
+      "./assets/samurai_attack-93x43x5.png",
+      {
+        frameWidth: 93,
+        frameHeight: 43,
+      }
+    );
 
     this.load.audio("jump", "./assets/sounds/jump.mp3");
     this.load.audio("collect", "./assets/sounds/collect.mp3");
@@ -153,6 +166,36 @@ class MainScene extends Phaser.Scene {
       repeat: -1,
     });
 
+    this.anims.create({
+      key: "attack-mystery",
+      frames: this.anims.generateFrameNumbers("mystery", {
+        start: 56,
+        end: 63,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "run-samurai",
+      frames: this.anims.generateFrameNumbers("samurai", {
+        start: 0,
+        end: 7,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "attack-samurai",
+      frames: this.anims.generateFrameNumbers("samurai_attack", {
+        start: 0,
+        end: 4,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
     this.add
       .text(this.game.config.width - 100, 20, "Shop", {
         fontSize: "24px",
@@ -225,9 +268,47 @@ class MainScene extends Phaser.Scene {
     if (this.powerUpActive) {
       poop.destroy();
       // 점수를 올린다
+
+      if (player.hasAttackAnimation) {
+        const character = player.anims.currentAnim.key.split("-")[1];
+        player.play(`attack-${character}`);
+        this.time.delayedCall(500, () => {
+          player.play(`run-${character}`);
+        });
+      }
+
       this.score += 10;
       this.scoreText.setText("Score: " + this.score);
       this.soundManager.play("collect");
+      return;
+    }
+
+    if (this.player.invulnerable) return;
+
+    if (this.player.life > 1) {
+      this.player.life -= 1;
+      poop.destroy();
+      this.player.setInvulnerable();
+      this.player.setTint(0xff0000);
+
+      if (player.hasAttackAnimation) {
+        const character = player.anims.currentAnim.key;
+
+        if (character === "run-samurai") {
+          player.play("attack-samurai");
+          this.time.delayedCall(500, () => {
+            player.play("run-samurai");
+          });
+        }
+
+        if (character === "run-mystery") {
+          player.play("attack-mystery");
+          this.time.delayedCall(500, () => {
+            player.play("run-mystery");
+          });
+        }
+      }
+      this.soundManager.play("hit");
       return;
     }
 
@@ -339,6 +420,16 @@ class MainScene extends Phaser.Scene {
       this.player.setAllowJumpAcceleration();
       this.player.setAllowDoubleJump();
       this.player.setCollisionArea();
+      this.player.setAttackAnimation();
+    }
+
+    if (currentCharacter === "samurai") {
+      this.player.play("run-samurai");
+      this.player.setAllowJumpAcceleration();
+      this.player.setAllowDoubleJump();
+      this.player.setCollisionArea();
+      this.player.setLife(2);
+      this.player.setAttackAnimation();
     }
 
     // sizeUp 상태일 경우 가로 크기를 1.5배로 키움

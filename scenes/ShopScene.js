@@ -34,7 +34,8 @@ class ShopScene extends Phaser.Scene {
     const characterItems = [
       { name: "모험가", price: 100, key: "adventurer" },
       { name: "기사", price: 300, key: "knight" },
-      { name: "???", price: 700, key: "mystery" },
+      { name: "mystery", price: 700, key: "mystery" },
+      { name: "???", price: 1000, key: "samurai" },
     ];
     const specialItems = [
       { name: "사이즈업", price: 10, key: "sizeUp" },
@@ -97,7 +98,7 @@ class ShopScene extends Phaser.Scene {
       .text(
         width * 0.95,
         height * 0.95,
-        "Designed by Lee-Young-Jae, Game Version: 1.0.2.",
+        "Designed by Lee-Young-Jae, Game Version: 1.0.3.",
         {
           fontSize: this.getFontSize(8),
         }

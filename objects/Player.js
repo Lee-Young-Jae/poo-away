@@ -10,11 +10,18 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.allowDoubleJump = false;
     this.jumps = 0;
     this.jumpPressed = false;
+    this.life = 1;
+    this.invulnerable = false;
+    this.hasAttackAnimation = false;
   }
 
   sizeUp() {
     this.setScale(2);
     this.setCollisionArea();
+  }
+
+  setAttackAnimation() {
+    this.hasAttackAnimation = true;
   }
 
   speedUp() {
@@ -27,6 +34,18 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
   jumpLower() {
     this.jumpSpeed = -150;
+  }
+
+  setLife(life) {
+    this.life = life;
+  }
+
+  setInvulnerable() {
+    this.invulnerable = true;
+    setTimeout(() => {
+      this.invulnerable = false;
+      this.setTint(0xffffff);
+    }, 3000);
   }
 
   setAllowJumpAcceleration() {
