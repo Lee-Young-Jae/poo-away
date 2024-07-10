@@ -17,10 +17,10 @@ class MainScene extends Phaser.Scene {
     );
     this.load.image("poop", "./assets/poo.png");
     this.load.image("star", "./assets/star.png");
-    // this.load.spritesheet("foods", "./assets/foods-16x16x64.png", {
-    //   frameWidth: 16,
-    //   frameHeight: 16,
-    // });
+    this.load.spritesheet("foods", "./assets/foods-16x16x64.png", {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
     this.load.spritesheet("coin", "./assets/coin-16x16x4.png", {
       frameWidth: 16,
       frameHeight: 16,
@@ -128,6 +128,13 @@ class MainScene extends Phaser.Scene {
       null,
       this
     );
+    this.physics.add.overlap(
+      this.player,
+      this.obstacles.foods,
+      this.collectFood,
+      null,
+      this
+    );
 
     this.anims.create({
       key: "spin",
@@ -196,6 +203,16 @@ class MainScene extends Phaser.Scene {
       repeat: -1,
     });
 
+    this.anims.create({
+      key: "repeat",
+      frames: this.anims.generateFrameNumbers("foods", {
+        start: 0,
+        end: 16,
+      }),
+      frameRate: 4,
+      repeat: -1,
+    });
+
     this.add
       .text(this.game.config.width - 100, 20, "Shop", {
         fontSize: "24px",
@@ -206,6 +223,10 @@ class MainScene extends Phaser.Scene {
         this.soundManager.stop("bgm");
         this.scene.start("ShopScene", { coins: this.coins });
       });
+
+    // life 표시
+    this.lifeGroup = this.add.group();
+    this.updateLifeDisplay();
 
     // 구매한 캐릭터 적용
     this.loadCharacter();
@@ -225,6 +246,22 @@ class MainScene extends Phaser.Scene {
 
     // this.physics.world.createDebugGraphic();
     // this.physics.world.debugGraphic.setDepth(999);
+  }
+
+  updateLifeDisplay() {
+    this.lifeGroup.clear(true, true);
+    const lifeCount = this.player.life;
+    const characterTexture = this.player.texture.key;
+
+    for (let i = 0; i < lifeCount; i++) {
+      const lifeIcon = this.add.image(
+        this.game.config.width - 50,
+        80 + i * 30,
+        characterTexture
+      );
+      lifeIcon.setScale(0.8);
+      this.lifeGroup.add(lifeIcon);
+    }
   }
 
   update() {
@@ -262,6 +299,10 @@ class MainScene extends Phaser.Scene {
         this.obstacles.dropCoin();
       }
     }
+
+    if (Phaser.Math.Between(1, 200) === 1 && !this.isFeverTime) {
+      this.obstacles.dropFood();
+    }
   }
 
   hitPoop(player, poop) {
@@ -287,6 +328,7 @@ class MainScene extends Phaser.Scene {
 
     if (this.player.life > 1) {
       this.player.life -= 1;
+      this.updateLifeDisplay();
       poop.destroy();
       this.player.setInvulnerable();
       this.player.setTint(0xff0000);
@@ -409,7 +451,7 @@ class MainScene extends Phaser.Scene {
       this.player.play("run-knight");
       this.player.jumpLower();
       this.player.setAllowJumpAcceleration();
-      // this.player.setCollisionArea();
+      this.player.setCollisionArea();
     }
 
     if (currentCharacter === "mystery") {
@@ -468,15 +510,17 @@ class MainScene extends Phaser.Scene {
     if (this.powerUpTimer) {
       this.powerUpTimer.remove();
     }
+
+    // 라이프 표시 갱신
+    this.updateLifeDisplay();
   }
 
-  collectStar(player, star) {
-    star.destroy();
-    this.powerUpActive = true;
-    player.setTint(0x87ceeb);
-    this.soundManager.play("powerup");
-    if (this.powerUpTimer) this.powerUpTimer.remove();
-    this.powerUpTimer = this.time.delayedCall(5000, this.endPowerUp, [], this);
+  collectFood(player, food) {
+    food.destroy();
+    player.setLife(player.life + 1);
+    this.soundManager.play("collect");
+    this.updateLifeDisplay();
+    this.score += 10;
   }
 
   collectPowerUp(player, powerUp) {
@@ -487,7 +531,7 @@ class MainScene extends Phaser.Scene {
     this.soundManager.play("powerupBgm", { loop: true });
 
     if (powerUp.type === 2) {
-      this.physics.world.timeScale = 0.5;
+      this.physics.world.timeScale = 0.75;
       if (this.powerUpTimer) this.powerUpTimer.remove();
       this.powerUpTimer = this.time.delayedCall(
         5000,
@@ -505,8 +549,8 @@ class MainScene extends Phaser.Scene {
       this.scoreText.setText("Score: " + this.score);
       this.soundManager.play("collect");
       localStorage.setItem("coins", this.coins.toString());
+      this.obstacles.convertPoopToCoin();
       this.obstacles.poops.clear(true, true);
-
       this.endPowerUp();
     } else {
       if (this.powerUpTimer) this.powerUpTimer.remove();

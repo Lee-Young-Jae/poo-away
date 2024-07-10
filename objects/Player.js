@@ -13,6 +13,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.life = 1;
     this.invulnerable = false;
     this.hasAttackAnimation = false;
+    this.hasFastDown = false;
   }
 
   sizeUp() {
@@ -38,6 +39,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
   setLife(life) {
     this.life = life;
+  }
+
+  setFastDown() {
+    this.hasFastDown = true;
   }
 
   setInvulnerable() {

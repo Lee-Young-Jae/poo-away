@@ -3,9 +3,26 @@ class Obstacles {
     this.scene = scene;
     this.poops = scene.physics.add.group();
     this.coins = scene.physics.add.group();
-    this.stars = scene.physics.add.group();
+    this.foods = scene.physics.add.group();
     this.powerUps = scene.physics.add.group();
     this.boss = scene.physics.add.group();
+  }
+
+  convertPoopToCoin() {
+    this.poops.getChildren().forEach((poop) => {
+      const x = poop.x;
+      const y = poop.y;
+      const velocityX = poop.body.velocity.x;
+      const velocityY = poop.body.velocity.y;
+
+      poop.destroy();
+      const coin = this.coins.create(x, y, "coin");
+      coin.setBounce(0.7);
+      coin.setCollideWorldBounds(false);
+      coin.setVelocity(velocityX, velocityY);
+      coin.anims.play("spin");
+      coin.setScale(2);
+    });
   }
 
   dropPoop() {
@@ -67,5 +84,16 @@ class Obstacles {
     powerUp.setBounce(0.7);
     powerUp.setCollideWorldBounds(false);
     powerUp.setVelocity(Phaser.Math.Between(-50, 50), 50);
+  }
+
+  dropFood() {
+    const x = Phaser.Math.Between(0, this.scene.game.config.width);
+    const food = this.foods.create(x, 0, "food");
+    food.setBounce(0.7);
+    food.setCollideWorldBounds(false);
+    food.setVelocity(Phaser.Math.Between(-150, 150), 150);
+    food.anims.play("repeat");
+    food.setScale(2);
+    food.setBodySize(20, 20);
   }
 }
