@@ -30,9 +30,9 @@ class MainScene extends Phaser.Scene {
       frameWidth: 50,
       frameHeight: 37,
     });
-    this.load.spritesheet("knight", "./assets/knight-120x80x12.png", {
+    this.load.spritesheet("knight", "./assets/knight-120x40x12.png", {
       frameWidth: 120,
-      frameHeight: 80,
+      frameHeight: 40,
     });
     this.load.spritesheet("mystery", "./assets/mystery-32x32x72.png", {
       frameWidth: 32,
@@ -180,8 +180,8 @@ class MainScene extends Phaser.Scene {
     this.physics.world.defaults.debugShowStaticBody = true;
     this.physics.world.defaults.debugBodyColor = 0xff00ff; // 충돌 영역 색상 설정
 
-    // this.physics.world.createDebugGraphic();
-    // this.physics.world.debugGraphic.setDepth(999);
+    this.physics.world.createDebugGraphic();
+    this.physics.world.debugGraphic.setDepth(999);
   }
 
   update() {
@@ -326,10 +326,9 @@ class MainScene extends Phaser.Scene {
 
     if (currentCharacter === "knight") {
       this.player.play("run-knight");
-      this.player.setOffset(0, 0); // y 오프셋을 16으로 설정 (예시 값)
-      this.player.jumpHigher();
+      this.player.jumpLower();
       this.player.setAllowJumpAcceleration();
-      this.player.setCollisionArea();
+      // this.player.setCollisionArea();
     }
 
     if (currentCharacter === "mystery") {
