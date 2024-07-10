@@ -180,8 +180,8 @@ class MainScene extends Phaser.Scene {
     this.physics.world.defaults.debugShowStaticBody = true;
     this.physics.world.defaults.debugBodyColor = 0xff00ff; // 충돌 영역 색상 설정
 
-    // this.physics.world.createDebugGraphic();
-    // this.physics.world.debugGraphic.setDepth(999);
+    this.physics.world.createDebugGraphic();
+    this.physics.world.debugGraphic.setDepth(999);
   }
 
   update() {
@@ -383,7 +383,7 @@ class MainScene extends Phaser.Scene {
   collectStar(player, star) {
     star.destroy();
     this.powerUpActive = true;
-    player.setTint(0x00ff00);
+    player.setTint(0xffff00);
     this.soundManager.play("powerup");
     if (this.powerUpTimer) this.powerUpTimer.remove();
     this.powerUpTimer = this.time.delayedCall(5000, this.endPowerUp, [], this);
@@ -392,7 +392,7 @@ class MainScene extends Phaser.Scene {
   collectPowerUp(player, powerUp) {
     powerUp.destroy();
     this.powerUpActive = true;
-    player.setTint(0x00ff00);
+    player.setTint(0xffff00);
     this.soundManager.play("powerup");
     this.soundManager.play("powerupBgm", { loop: true });
 
