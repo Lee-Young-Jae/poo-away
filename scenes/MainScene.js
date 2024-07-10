@@ -180,8 +180,8 @@ class MainScene extends Phaser.Scene {
     this.physics.world.defaults.debugShowStaticBody = true;
     this.physics.world.defaults.debugBodyColor = 0xff00ff; // 충돌 영역 색상 설정
 
-    this.physics.world.createDebugGraphic();
-    this.physics.world.debugGraphic.setDepth(999);
+    // this.physics.world.createDebugGraphic();
+    // this.physics.world.debugGraphic.setDepth(999);
   }
 
   update() {
