@@ -473,7 +473,7 @@ class MainScene extends Phaser.Scene {
   collectStar(player, star) {
     star.destroy();
     this.powerUpActive = true;
-    player.setTint(0x00ff00);
+    player.setTint(0x87ceeb);
     this.soundManager.play("powerup");
     if (this.powerUpTimer) this.powerUpTimer.remove();
     this.powerUpTimer = this.time.delayedCall(5000, this.endPowerUp, [], this);
@@ -482,7 +482,7 @@ class MainScene extends Phaser.Scene {
   collectPowerUp(player, powerUp) {
     powerUp.destroy();
     this.powerUpActive = true;
-    player.setTint(0x00ff00);
+    player.setTint(0x87ceeb);
     this.soundManager.play("powerup");
     this.soundManager.play("powerupBgm", { loop: true });
 
