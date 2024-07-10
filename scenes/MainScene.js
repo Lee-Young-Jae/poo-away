@@ -433,8 +433,6 @@ class MainScene extends Phaser.Scene {
     this.powerUpActive = false;
     this.soundManager.stop("powerupBgm");
     this.player.clearTint();
-    const scale = this.player.scaleX;
-    this.player.setScale(scale / 1.5);
   }
 
   levelUp() {
