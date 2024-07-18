@@ -4,7 +4,7 @@ class MainScene extends Phaser.Scene {
     this.score = 0;
     this.level = 1;
     this.gameOver = false;
-    this.dropInterval = 1000;
+    this.dropInterval = 700;
     this.powerUpActive = false;
     this.isBossStage = false;
     this.isFeverTime = false;
@@ -489,7 +489,7 @@ class MainScene extends Phaser.Scene {
     this.scoreText.setText("Score: 0");
     this.level = 1;
     this.levelText.setText("Level: 1");
-    this.dropInterval = 1000;
+    this.dropInterval = 700;
     this.time.removeAllEvents();
 
     if (this.isFeverTime) {
@@ -574,13 +574,13 @@ class MainScene extends Phaser.Scene {
     this.level++;
     this.levelText.setText("Level: " + this.level);
 
-    this.dropInterval -= 100;
+    this.dropInterval -= 70;
     if (this.dropInterval < 500) this.dropInterval = 500;
   }
 
   startFeverTime() {
     this.soundManager.stop("bgm");
-    this.soundManager.play("feverbgm", { loop: true });
+    this.soundManager.play("feverbgm", { loop: true, volume: 0.5 });
 
     this.isFeverTime = true;
     const feverInterval = 500;
